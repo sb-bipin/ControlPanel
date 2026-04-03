@@ -1,7 +1,7 @@
 <Solution>
   <Folder Name="/Solution Items/" />
-  <Project Path="API/API.csproj" />
-  <Project Path="Application/Application.csproj" />
-  <Project Path="Domain/Domain.csproj" />
-  <Project Path="Infrastructure/Infrastructure.csproj" />
+  <Project Path="main/API/API.csproj" />
+  <Project Path="main/Application/Application.csproj" />
+  <Project Path="main/Domain/Domain.csproj" />
+  <Project Path="main/Infrastructure/Infrastructure.csproj" />
 </Solution>

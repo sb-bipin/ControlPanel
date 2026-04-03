@@ -1,0 +1,45 @@
+﻿using Application.Common.Interfaces;
+using Application.Common.Models;
+using Infrastructure.Identity;
+using Infrastructure.Models;
+using Microsoft.AspNetCore.Mvc;
+
+namespace API.Controllers
+{
+    [ApiController]
+    [Route("api/[controller]")]
+    public class AuthController : ControllerBase
+    {
+        private readonly IIdentityService _identityService;
+        private readonly ILogger<AuthController> _logger;
+
+        public AuthController(IIdentityService identityService)
+        {
+            _identityService = identityService;
+        }
+
+        [HttpPost("register")]
+        public async Task<IActionResult> Register([FromBody] RegisterDto dto)
+        {
+            var userId = await _identityService.RegisterAsync(dto.Email, dto.Password, dto.FirstName, dto.LastName);
+            return Ok(new { UserId = userId });
+        }
+
+        [HttpPost("login")]
+        public async Task<ActionResult<LogInResponse>> Login([FromBody] LoginDto dto)
+        {
+            //_logger.LogInformation("This is an info log from the controller!");  //its here for testing purpose only 
+
+            var response = await _identityService.LoginAsync(dto.Email, dto.Password);
+            return Ok(response);
+        }
+
+        [HttpGet]
+        public async Task<List<IApplicationUser>> GetAllUsers()
+        {
+            return await _identityService.GetAllUsersAsync();
+        }
+    }
+
+
+}
