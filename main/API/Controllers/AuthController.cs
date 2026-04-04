@@ -1,5 +1,6 @@
 ﻿using Application.Common.Interfaces;
 using Application.Common.Models;
+using Application.Common.Responses;
 using Infrastructure.Identity;
 using Infrastructure.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -11,7 +12,6 @@ namespace API.Controllers
     public class AuthController : ControllerBase
     {
         private readonly IIdentityService _identityService;
-        private readonly ILogger<AuthController> _logger;
 
         public AuthController(IIdentityService identityService)
         {
@@ -19,39 +19,76 @@ namespace API.Controllers
         }
 
         [HttpPost("register")]
-        public async Task<IActionResult> Register([FromBody] RegisterDto dto)
+        public async Task<ActionResult<ServiceResponse<string>>> Register([FromBody] RegisterDto dto)
         {
-            var userId = await _identityService.RegisterAsync(dto.Username, dto.Email, dto.Password, dto.FirstName, dto.LastName);
-            return Ok(new { UserId = userId });
+            try
+            {
+                var userId = await _identityService.RegisterAsync(dto.Username, dto.Email, dto.Password, dto.FirstName, dto.LastName);
+                return Ok(ServiceResponse<string>.SuccessResponse(userId, "Registration successful."));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode((int)System.Net.HttpStatusCode.InternalServerError, ServiceResponse<string>.ExceptionResponse(ex));
+            }
         }
 
         [HttpPost("login")]
-        public async Task<ActionResult<LogInResponse>> Login([FromBody] LoginDto dto)
+        public async Task<ActionResult<ServiceResponse<LogInResponse>>> Login([FromBody] LoginDto dto)
         {
-            var response = await _identityService.LoginAsync(dto.Email, dto.Password);
-            return Ok(response);
+            try
+            {
+                var response = await _identityService.LoginAsync(dto.Email, dto.Password);
+                return Ok(ServiceResponse<LogInResponse>.SuccessResponse((LogInResponse)response, "Login successful."));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode((int)System.Net.HttpStatusCode.Unauthorized, ServiceResponse<LogInResponse>.FailureResponse(ex.Message, "Login failed.", (int)System.Net.HttpStatusCode.Unauthorized));
+            }
         }
 
         [HttpGet]
-        public async Task<List<IApplicationUser>> GetAllUsers()
+        public async Task<ActionResult<ServiceResponse<List<IApplicationUser>>>> GetAllUsers()
         {
-            return await _identityService.GetAllUsersAsync();
+            try
+            {
+                var users = await _identityService.GetAllUsersAsync();
+                return Ok(ServiceResponse<List<IApplicationUser>>.SuccessResponse(users.ToList(), "Users retrieved."));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode((int)System.Net.HttpStatusCode.InternalServerError, ServiceResponse<List<IApplicationUser>>.ExceptionResponse(ex));
+            }
         }
 
         [HttpPost("forgot-password")]
-        public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordDto dto)
+        public async Task<ActionResult<ServiceResponse<string>>> ForgotPassword([FromBody] ForgotPasswordDto dto)
         {
-            var token = await _identityService.GeneratePasswordResetTokenAsync(dto.Email);
-            return Ok(new { Token = token });
+            try
+            {
+                var token = await _identityService.GeneratePasswordResetTokenAsync(dto.Email);
+                return Ok(ServiceResponse<string>.SuccessResponse(token, "Password reset token generated."));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode((int)System.Net.HttpStatusCode.InternalServerError, ServiceResponse<string>.ExceptionResponse(ex));
+            }
         }
 
         [HttpPost("reset-password")]
-        public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordDto dto)
+        public async Task<ActionResult<ServiceResponse<string>>> ResetPassword([FromBody] ResetPasswordDto dto)
         {
-            var result = await _identityService.ResetPasswordAsync(dto.UserId, dto.NewPassword);
-            if (!result)
-                return BadRequest(new { Message = "Failed to reset password." });
-            return Ok(new { Message = "Password reset successful." });
+            try
+            {
+                var result = await _identityService.ResetPasswordAsync(dto.UserId, dto.NewPassword);
+                if (!result)
+                    return BadRequest(ServiceResponse<string>.FailureResponse("Failed to reset password.", "Password reset failed."));
+
+                return Ok(ServiceResponse<string>.SuccessResponse("", "Password reset successful."));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode((int)System.Net.HttpStatusCode.InternalServerError, ServiceResponse<string>.ExceptionResponse(ex));
+            }
         }
     }
 
