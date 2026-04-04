@@ -32,7 +32,7 @@ namespace Infrastructure.Identity
                                     Email = user.Email,
                                     FirstName = user.FirstName,
                                     LastName = user.LastName,
-                                    //UserType = user.UserType,
+                                    Username = user.Username,
                                     CreatedBy = user.CreatedBy,
                                     CreatedOn = user.CreatedOn,
                                     UpdatedBy = user.UpdatedBy,
@@ -46,19 +46,18 @@ namespace Infrastructure.Identity
 
             return users.Cast<IApplicationUser>().ToList();
         }
-        public async Task<string> RegisterAsync(string email, string password, string firstName, string lastName)
+        public async Task<string> RegisterAsync(string username, string email, string password, string firstName, string lastName)
         {
             var user = new ApplicationUser
             {
-                UserName = email,
-                NormalizedUserName = email.ToUpperInvariant(),
+                UserName = username,
+                NormalizedUserName = username.ToUpperInvariant(),
                 Email = email,
                 NormalizedEmail = email.ToUpperInvariant(),
                 FirstName = firstName,
                 LastName = lastName,
-                //UserType = Domain.Enums.UserType.Customer,
                 CreatedBy = new Guid(),
-                CreatedOn = DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss")
+                CreatedOn = DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss"),
             };
             var result = await _userManager.CreateAsync(user, password);
 
@@ -100,6 +99,26 @@ namespace Infrastructure.Identity
         {
             var user = await _userManager.FindByIdAsync(userId);
             return await _userManager.IsInRoleAsync(user, role);
+        }
+
+        public async Task<string> GeneratePasswordResetTokenAsync(string email)
+        {
+            var user = await _userManager.FindByEmailAsync(email);
+            if (user == null)
+                throw new Exception("User not found.");
+
+            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+            return token;
+        }
+
+        public async Task<bool> ResetPasswordAsync(string userId, string newPassword)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+                return false;
+            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+            var result = await _userManager.ResetPasswordAsync(user, token, newPassword);
+            return result.Succeeded;
         }
     }
 }

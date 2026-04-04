@@ -4,6 +4,7 @@ namespace Infrastructure.Models
 {
     public class ApplicationUser : IdentityUser
     {
+        public string Username { get; set; }
         public string? FirstName { get; set; }
         public string? LastName { get; set; }
         public string CreatedOn { get; set; }
