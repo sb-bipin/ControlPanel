@@ -12,6 +12,7 @@ namespace Application.Common.Models
         public Guid CreatedBy { get; set; }
         public string? UpdatedOn { get; set; }
         public Guid? UpdatedBy { get; set; }
+        public string UserName { get; set; }
 
         public new string? NormalizedUserName { get; set; }
         public new string? Email { get; set; }

@@ -32,7 +32,7 @@ namespace Infrastructure.Identity
                                     Email = user.Email,
                                     FirstName = user.FirstName,
                                     LastName = user.LastName,
-                                    Username = user.Username,
+                                    Username = user.UserName,
                                     CreatedBy = user.CreatedBy,
                                     CreatedOn = user.CreatedOn,
                                     UpdatedBy = user.UpdatedBy,
@@ -71,7 +71,7 @@ namespace Infrastructure.Identity
         {
             var user = await _userManager.FindByEmailAsync(email);
 
-            if (user == null)
+            if (user is null)
                 throw new Exception("Username not found for login.");
 
             var result = await _signInManager.PasswordSignInAsync(user.UserName!, password, false, false);
@@ -79,7 +79,7 @@ namespace Infrastructure.Identity
             if (!result.Succeeded)
                 throw new Exception("Invalid login attempt.");
 
-            var token = _tokenService.GenerateJwtToken((IApplicationUser) user);
+            var token = _tokenService.GenerateJwtToken(user);
 
             return new LogInResponse
             {

@@ -23,12 +23,9 @@ public class TokenService : ITokenService
     {
         var claims = new[]
         {
-            //new Claim(JwtRegisteredClaimNames.Sub, user.Id),
             new Claim(JwtRegisteredClaimNames.Email, user.Email ?? ""),
-            //new Claim(ClaimTypes.NameIdentifier, user.Id),
-            //new Claim("userType", user.UserType.ToString()),
+            new Claim("Username", user.UserName ?? ""),
             new Claim("UserId",_currentUserLoggedInService.UserId.ToString())
-            //if any new details want to add on token then add it here eg:: info about users
         };
 
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(

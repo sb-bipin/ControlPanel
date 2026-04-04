@@ -1,10 +1,10 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Application.Common.Models;
+using Microsoft.AspNetCore.Identity;
 
 namespace Infrastructure.Models
 {
-    public class ApplicationUser : IdentityUser
+    public class ApplicationUser : IdentityUser,IApplicationUser
     {
-        public string Username { get; set; }
         public string? FirstName { get; set; }
         public string? LastName { get; set; }
         public string CreatedOn { get; set; }

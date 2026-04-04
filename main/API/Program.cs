@@ -3,34 +3,55 @@ using Application;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services
+// -------------------- SERVICES --------------------
+
+// Controllers
 builder.Services.AddControllers();
 
 // Swagger
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// Add your layers (Clean Architecture)
+// CORS (FIX for your issue)
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll", policy =>
+    {
+        policy
+            .AllowAnyOrigin()
+            .AllowAnyMethod()
+            .AllowAnyHeader();
+    });
+});
+
+// Clean Architecture Layers
 builder.Services
     .AddApplication()
     .AddInfrastructure(builder.Configuration);
 
+// -------------------- APP --------------------
+
 var app = builder.Build();
 
-// Middleware
+// -------------------- MIDDLEWARE --------------------
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
 
+// HTTPS
 app.UseHttpsRedirection();
 
-// Authentication & Authorization (important for Identity)
+// CORS (IMPORTANT: must be before auth)
+app.UseCors("AllowAll");
+
+// Authentication & Authorization
 app.UseAuthentication();
 app.UseAuthorization();
 
-// Map controllers
+// Controllers
 app.MapControllers();
 
 app.Run();
