@@ -1,6 +1,6 @@
 ﻿using Application.Common.Interfaces;
 using Application.Common.Models;
-using Infrastructure.Models;
+using Infrastructure.Common.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;

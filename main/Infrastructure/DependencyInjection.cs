@@ -1,6 +1,6 @@
 ﻿using Application.Common.Interfaces;
+using Infrastructure.Common.Models;
 using Infrastructure.Identity;
-using Infrastructure.Models;
 using Infrastructure.Persistence;
 using Infrastructure.Services;
 using Microsoft.AspNetCore.Identity;

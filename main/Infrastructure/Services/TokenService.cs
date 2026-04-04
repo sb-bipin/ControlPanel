@@ -1,7 +1,5 @@
 ﻿using Application.Common.Interfaces;
 using Application.Common.Models;
-using Infrastructure.Identity;
-using Infrastructure.Models;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;

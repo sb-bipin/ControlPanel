@@ -1,7 +1,7 @@
 ﻿using Application.Common.Models;
 using Microsoft.AspNetCore.Identity;
 
-namespace Infrastructure.Models
+namespace Infrastructure.Common.Models
 {
     public class ApplicationUser : IdentityUser,IApplicationUser
     {

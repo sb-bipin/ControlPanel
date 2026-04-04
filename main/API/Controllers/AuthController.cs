@@ -1,8 +1,8 @@
 ﻿using Application.Common.Interfaces;
 using Application.Common.Models;
 using Application.Common.Responses;
+using Infrastructure.Common.Models;
 using Infrastructure.Identity;
-using Infrastructure.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers

@@ -1,5 +1,5 @@
 ﻿using Application.Common.Interfaces;
-using Infrastructure.Models;
+using Infrastructure.Common.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 

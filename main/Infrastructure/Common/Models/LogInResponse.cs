@@ -1,6 +1,6 @@
 ﻿using Application.Common.Models;
 
-namespace Infrastructure.Models
+namespace Infrastructure.Common.Models
 {
     public class LogInResponse : ILogInResponse
     {
