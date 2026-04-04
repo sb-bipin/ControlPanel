@@ -46,7 +46,7 @@ namespace API.Controllers
             }
         }
 
-        [HttpGet]
+        [HttpGet("all-users")]
         public async Task<ActionResult<ServiceResponse<List<IApplicationUser>>>> GetAllUsers()
         {
             try

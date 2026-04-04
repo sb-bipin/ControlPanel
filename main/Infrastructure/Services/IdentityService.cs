@@ -83,7 +83,6 @@ namespace Infrastructure.Identity
 
             return new LogInResponse
             {
-                UserId = user.Id,
                 Token = token
             };
         }
