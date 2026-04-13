@@ -28,11 +28,11 @@ namespace Infrastructure.Identity
             var users = await _userManager.Users
                                 .Select(user => new ApplicationUserDto
                                 {
-                                    Id = user.Id,
+                                    Id =  user.Id,
                                     Email = user.Email,
                                     FirstName = user.FirstName,
                                     LastName = user.LastName,
-                                    Username = user.UserName,
+                                    UserName = user.UserName,
                                     CreatedBy = user.CreatedBy,
                                     CreatedOn = user.CreatedOn,
                                     UpdatedBy = user.UpdatedBy,
@@ -64,7 +64,7 @@ namespace Infrastructure.Identity
             if (!result.Succeeded)
                 throw new Exception(string.Join("; ", result.Errors.Select(e => e.Description)));
 
-            return user.Id;
+            return user.Id.ToString();
         }
 
         public async Task<ILogInResponse> LoginAsync(string email, string password)
@@ -118,6 +118,26 @@ namespace Infrastructure.Identity
             var token = await _userManager.GeneratePasswordResetTokenAsync(user);
             var result = await _userManager.ResetPasswordAsync(user, token, newPassword);
             return result.Succeeded;
+        }
+
+        public async Task<IApplicationUser> UpdateUserDetails(UpdateUserDTO updateUserDTO)
+        {
+            var user = await _userManager.FindByIdAsync(updateUserDTO.Id.ToString());
+            if (user == null)
+                throw new Exception("User not found.");
+
+            user.FirstName = updateUserDTO.FirstName;
+            user.LastName = updateUserDTO.LastName;
+            user.UserName = updateUserDTO.UserName;
+            user.NormalizedUserName = user.UserName.ToUpperInvariant();
+            user.Email = updateUserDTO.Email;
+            user.NormalizedEmail = user.Email.ToUpperInvariant();
+
+            var result = await _userManager.UpdateAsync(user);
+            if (!result.Succeeded)
+                throw new Exception(string.Join("; ", result.Errors.Select(e => e.Description)));
+
+            return user;
         }
     }
 }

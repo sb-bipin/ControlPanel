@@ -11,5 +11,6 @@ namespace Application.Common.Interfaces
         Task<List<IApplicationUser>> GetAllUsersAsync();
         Task<string> GeneratePasswordResetTokenAsync(string email);
         Task<bool> ResetPasswordAsync(string userId, string newPassword);
+        Task<IApplicationUser> UpdateUserDetails(UpdateUserDTO updateUserDTO);
     }
 }

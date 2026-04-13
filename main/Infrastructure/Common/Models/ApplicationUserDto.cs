@@ -14,7 +14,6 @@ namespace Infrastructure.Common.Models
         public string UserName { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
-        public string Username { get; set; }
         public string CreatedOn { get; set; }
         public Guid CreatedBy { get; set; }
         public string? UpdatedOn { get; set; }

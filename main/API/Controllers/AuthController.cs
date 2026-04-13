@@ -90,7 +90,22 @@ namespace API.Controllers
                 return StatusCode((int)System.Net.HttpStatusCode.InternalServerError, ServiceResponse<string>.ExceptionResponse(ex));
             }
         }
-    }
 
+        [HttpPut("update-user")]
+        public async Task<ActionResult<ServiceResponse<IApplicationUser>>> UpdateUser([FromBody] UpdateUserDTO dto)
+        {
+            try
+            {
+                var updatedUser = await _identityService.UpdateUserDetails(dto);
+                return Ok(ServiceResponse<IApplicationUser>.SuccessResponse(updatedUser, "User details updated."));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode((int)System.Net.HttpStatusCode.InternalServerError, ServiceResponse<IApplicationUser>.ExceptionResponse(ex));
+            }
+        }
+
+
+    }
 
 }
