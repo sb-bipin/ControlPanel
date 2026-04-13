@@ -50,6 +50,7 @@ namespace Infrastructure.Identity
         {
             var user = new ApplicationUser
             {
+                Id = Guid.NewGuid().ToString(),
                 UserName = username,
                 NormalizedUserName = username.ToUpperInvariant(),
                 Email = email,
