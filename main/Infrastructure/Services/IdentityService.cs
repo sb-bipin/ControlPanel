@@ -13,14 +13,16 @@ namespace Infrastructure.Identity
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly ITokenService _tokenService;
-
+        private readonly ICurrentLoggedInUserService _currentUserService;
         public IdentityService(UserManager<ApplicationUser> userManager,
                                SignInManager<ApplicationUser> signInManager,
-                               ITokenService tokenService)
+                               ITokenService tokenService,
+                               ICurrentLoggedInUserService currentUserService)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _tokenService = tokenService;
+            _currentUserService = currentUserService;
         }
 
         public async Task<List<IApplicationUser>> GetAllUsersAsync()
@@ -57,7 +59,7 @@ namespace Infrastructure.Identity
                 NormalizedEmail = email.ToUpperInvariant(),
                 FirstName = firstName,
                 LastName = lastName,
-                CreatedBy = new Guid(),
+                CreatedBy = _currentUserService.UserId??new Guid(),
                 CreatedOn = DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss"),
             };
             var result = await _userManager.CreateAsync(user, password);
@@ -133,6 +135,9 @@ namespace Infrastructure.Identity
             user.NormalizedUserName = user.UserName.ToUpperInvariant();
             user.Email = updateUserDTO.Email;
             user.NormalizedEmail = user.Email.ToUpperInvariant();
+
+            user.UpdatedBy = _currentUserService.UserId ?? new Guid();
+            user.UpdatedOn = DateTime.UtcNow.ToString();
 
             var result = await _userManager.UpdateAsync(user);
             if (!result.Succeeded)
