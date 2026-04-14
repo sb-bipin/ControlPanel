@@ -1,7 +1,9 @@
 ﻿using Application.Common.Interfaces;
+using Domain.Interfaces;
 using Infrastructure.Common.Models;
 using Infrastructure.Identity;
 using Infrastructure.Persistence;
+using Infrastructure.Repositories;
 using Infrastructure.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -38,12 +40,16 @@ public static class DependencyInjection
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
 
+        services.AddScoped(typeof(IRepository<>), typeof(GenericRepository<>));
+
         services.AddHttpContextAccessor();
 
         services.AddScoped<ICurrentLoggedInUserService, CurrentLoggedInUserService>();
 
         services.AddScoped<IIdentityService, IdentityService>();
         services.AddScoped<ITokenService, TokenService>();
+
+        services.AddScoped<IFileStorage, LocalFileStorage>();
 
         return services;
     }
