@@ -24,7 +24,7 @@ namespace API.Controllers
                 ?? throw new InvalidOperationException("ImageStorage:RootPath is not configured");
         }
 
-        [HttpGet]
+        [HttpGet("getAll")]
         public async Task<ActionResult<ServiceResponse<List<GalleryItemDto>>>> GetAll()
         {
             try
@@ -44,7 +44,7 @@ namespace API.Controllers
             }
         }
 
-        [HttpPost]
+        [HttpPost("create")]
         public async Task<ActionResult<ServiceResponse<GalleryItemDto>>> Create([FromForm] CreateGalleryItemCommand command)
         {
             try
@@ -87,7 +87,7 @@ namespace API.Controllers
             }
         }
 
-        [HttpGet("{fileName}")]
+        [HttpGet("image/{fileName}")]
         public IActionResult GetImage(string fileName)
         {
             var filePath = Path.Combine(_storageRoot, fileName);
@@ -100,6 +100,25 @@ namespace API.Controllers
 
             var fileStream = System.IO.File.OpenRead(filePath);
             return File(fileStream, contentType);
+        }
+
+        [HttpPut("update/{id}")]
+        public async Task<ActionResult<ServiceResponse<GalleryItemDto>>> Update(Guid id, [FromForm] UpdateGalleryItemCommand command)
+        {
+            if (id != command.Id)
+                return BadRequest(ServiceResponse<GalleryItemDto>.FailureResponse("ID mismatch between URL and body."));
+
+            var result = await _mediator.Send(command);
+            result.ImageUrl = $"{Request.Scheme}://{Request.Host}{result.ImageUrl}";
+            return Ok(ServiceResponse<GalleryItemDto>.SuccessResponse(result, "Image updated successfully."));
+        }
+
+        [HttpGet("getImageById/{id}")]
+        public async Task<ActionResult<ServiceResponse<GalleryItemDto>>> GetById(Guid id)
+        {
+            var item = await _mediator.Send(new GetGalleryItemByIdQuery(id));
+            item.ImageUrl = $"{Request.Scheme}://{Request.Host}{item.ImageUrl}";
+            return Ok(ServiceResponse<GalleryItemDto>.SuccessResponse(item, "Gallery item retrieved."));
         }
     }
 }

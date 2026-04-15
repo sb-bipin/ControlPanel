@@ -19,7 +19,7 @@ public class GetAllGalleryItemsHandler : IRequestHandler<GetAllGalleryItemsQuery
     public async Task<List<GalleryItemDto>> Handle(GetAllGalleryItemsQuery request, CancellationToken ct)
     {
         var items = await _repository.GetAllAsync(ct);
-        return items.OrderByDescending(x => x.CreatedAt).Select(x => new GalleryItemDto
+        return items.OrderByDescending(x => x.CreatedOn).Select(x => new GalleryItemDto
         {
             Id = x.Id,
             Title = x.Title,
