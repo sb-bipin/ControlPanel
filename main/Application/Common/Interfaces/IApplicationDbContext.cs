@@ -12,6 +12,8 @@ namespace Application.Common.Interfaces
         public DbSet<GalleryItem> GalleryItems { get; set; }
         public DbSet<EventDetail> Events { get; set; }
         public DbSet<News> News { get; set; }
+        public DbSet<Notice> Notices { get; set; }
+
 
         DbSet<T> Set<T>() where T : class;
         EntityEntry<T> Entry<T>(T entity) where T : class;

@@ -20,6 +20,7 @@ namespace Infrastructure.Persistence
         public DbSet<GalleryItem> GalleryItems { get; set; }
         public DbSet<EventDetail> Events { get; set; }
         public DbSet<News> News { get; set; }
+        public DbSet<Notice> Notices { get; set; }
 
 
         public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
