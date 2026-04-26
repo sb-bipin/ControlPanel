@@ -22,7 +22,13 @@ public static class DependencyInjection
             if (string.IsNullOrWhiteSpace(connectionString))
                 throw new InvalidOperationException("Database connection string 'DefaultConnection' is not configured.");
 
-            options.UseSqlServer(connectionString);
+            //options.UseSqlServer(connectionString);
+
+            options.UseNpgsql(connectionString, npgsqlOptions =>
+            {
+                npgsqlOptions.UseRelationalNulls(); 
+            });
+
         });
 
         services.AddScoped<IApplicationDbContext>(provider =>
