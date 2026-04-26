@@ -4,9 +4,7 @@
 FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS base
 USER root
 WORKDIR /app
-EXPOSE 8080
-EXPOSE 8081
-
+EXPOSE ${PORT:-8080}
 
 # This stage is used to build the service project
 FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
@@ -26,8 +24,10 @@ FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
 RUN dotnet publish "./API.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
-# This stage is used in production or when running from VS in regular mode (Default when not using the Debug configuration)
+# This stage is used in production or when running from VS in regular mode
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
+# 🔥 CRITICAL FOR RENDER: Listen on the port provided by Render
+ENV ASPNETCORE_URLS=http://+:${PORT:-8080}
 ENTRYPOINT ["dotnet", "API.dll"]
