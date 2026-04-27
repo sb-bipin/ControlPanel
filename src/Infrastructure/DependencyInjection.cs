@@ -5,10 +5,13 @@ using Infrastructure.Identity;
 using Infrastructure.Persistence;
 using Infrastructure.Repositories;
 using Infrastructure.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace Infrastructure;
 
@@ -45,6 +48,29 @@ public static class DependencyInjection
                 })
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
+
+        var jwtSettings = configuration.GetSection("Jwt");
+        var key = Encoding.UTF8.GetBytes(jwtSettings["Key"]);
+
+        //services.AddAuthentication(options =>
+        //{
+        //    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+        //    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+        //})
+        //.AddJwtBearer(options =>
+        //{
+        //    options.TokenValidationParameters = new TokenValidationParameters
+        //    {
+        //        ValidateIssuer = true,
+        //        ValidIssuer = jwtSettings["Issuer"],
+        //        ValidateAudience = true,
+        //        ValidAudience = jwtSettings["Audience"],
+        //        ValidateLifetime = true,
+        //        ValidateIssuerSigningKey = true,
+        //        IssuerSigningKey = new SymmetricSecurityKey(key),
+        //        ClockSkew = TimeSpan.Zero 
+        //    };
+        //});
 
         services.AddScoped(typeof(IRepository<>), typeof(GenericRepository<>));
 

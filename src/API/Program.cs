@@ -1,13 +1,11 @@
+using Microsoft.EntityFrameworkCore;
 using Application;
 using Infrastructure;
 using Infrastructure.Persistence;
-using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-
 builder.Services.AddControllers();
-
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
@@ -16,8 +14,8 @@ builder.Services.AddCors(options =>
     options.AddPolicy("AllowAll", policy =>
     {
         policy
-            .AllowAnyOrigin()
-            .AllowAnyMethod()
+        .AllowAnyOrigin()
+              .AllowAnyMethod()
             .AllowAnyHeader();
     });
 });
@@ -36,11 +34,8 @@ using (var scope = app.Services.CreateScope())
     dbContext.Database.Migrate();
 }
 
-//if (app.Environment.IsDevelopment())
-//{
 app.UseSwagger();
-    app.UseSwaggerUI();
-//}
+app.UseSwaggerUI();
 
 app.UseCors("AllowAll");
 
@@ -53,7 +48,6 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
-
 app.MapHealthChecks("/health");
 
 //var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";

@@ -5,6 +5,7 @@ using Application.DTOs;
 using Application.Queries;
 using FluentValidation;               
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.StaticFiles;
 
@@ -12,6 +13,7 @@ namespace API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    //[Authorize]
     public class ImageGalleryController : ControllerBase
     {
         private readonly IMediator _mediator;
