@@ -29,8 +29,12 @@ public class CreateEventCommandHandler : IRequestHandler<CreateEventCommand, Eve
             imageUrl = await _fileStorage.SaveFileAsync(stream, request.ImageFile.FileName, ct);
         }
 
+        var utcDate = request.Date.Kind == DateTimeKind.Unspecified
+        ? DateTime.SpecifyKind(request.Date, DateTimeKind.Utc)
+        : request.Date.ToUniversalTime();
+
         var eventEntity = new EventDetail(
-            request.Title, request.Description, request.Date, request.Time,
+            request.Title, request.Description, utcDate, request.Time,
             request.Location, request.Organizer, imageUrl);
 
         await _repository.AddAsync(eventEntity, ct);

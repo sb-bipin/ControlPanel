@@ -9,6 +9,6 @@ public class CreateNoticeCommandValidator : AbstractValidator<CreateNoticeComman
     {
         RuleFor(x => x.Title).NotEmpty().MinimumLength(3).MaximumLength(200);
         RuleFor(x => x.Description).NotEmpty().MinimumLength(10);
-        RuleFor(x => x.Date).NotEmpty().LessThanOrEqualTo(DateTime.UtcNow.AddDays(1)); 
+        RuleFor(x => x.Date).NotEmpty().LessThanOrEqualTo(DateTime.UtcNow.AddMonths(3)); 
     }
 }

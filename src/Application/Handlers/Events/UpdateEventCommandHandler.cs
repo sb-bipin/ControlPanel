@@ -35,7 +35,11 @@ public class UpdateEventCommandHandler : IRequestHandler<UpdateEventCommand, Eve
             newImageUrl = await _fileStorage.SaveFileAsync(stream, request.ImageFile.FileName, ct);
         }
 
-        existing.Update(request.Title, request.Description, request.Date, request.Time,
+        var utcDate = request.Date.Kind == DateTimeKind.Unspecified
+                         ? DateTime.SpecifyKind(request.Date, DateTimeKind.Utc)
+                         : request.Date.ToUniversalTime();
+
+        existing.Update(request.Title, request.Description, utcDate, request.Time,
                         request.Location, request.Organizer, newImageUrl);
 
         _repository.Update(existing);
