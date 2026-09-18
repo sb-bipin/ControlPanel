@@ -2,12 +2,13 @@ using Microsoft.EntityFrameworkCore;
 using Application;
 using Infrastructure;
 using Infrastructure.Persistence;
+using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddOpenApi();
 
 builder.Services.AddCors(options =>
 {
@@ -34,10 +35,10 @@ using (var scope = app.Services.CreateScope())
     dbContext.Database.Migrate();
 }
 
-app.UseSwagger();
-app.UseSwaggerUI();
-
 app.UseCors("AllowAll");
+
+app.MapOpenApi();
+app.MapScalarApiReference();
 
 if (!app.Environment.IsDevelopment())
 {

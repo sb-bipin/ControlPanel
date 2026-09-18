@@ -100,7 +100,7 @@ public class NoticesController : ControllerBase
         try
         {
             await _mediator.Send(new DeleteNoticeCommand { Id = id });
-            return Ok(ServiceResponse<object>.SuccessResponse(null, "Notice deleted successfully."));
+            return Ok(ServiceResponse<object>.SuccessResponse(null!, "Notice deleted successfully."));
         }
         catch (Exception ex)
         {

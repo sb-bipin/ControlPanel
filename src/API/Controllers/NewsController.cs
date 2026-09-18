@@ -130,7 +130,7 @@ public class NewsController : ControllerBase
         try
         {
             await _mediator.Send(new DeleteNewsCommand { Id = id });
-            return Ok(ServiceResponse<object>.SuccessResponse(null, "News deleted successfully."));
+            return Ok(ServiceResponse<object>.SuccessResponse(null!, "News deleted successfully."));
         }
         catch (Exception ex)
         {

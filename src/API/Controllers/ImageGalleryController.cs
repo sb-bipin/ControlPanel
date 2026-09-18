@@ -76,7 +76,7 @@ namespace API.Controllers
             try
             {
                 await _mediator.Send(new DeleteGalleryItemCommand(id));
-                return Ok(ServiceResponse<object>.SuccessResponse(null, "Gallery item deleted successfully."));
+                return Ok(ServiceResponse<object>.SuccessResponse(null!, "Gallery item deleted successfully."));
             }
             catch (FileNotFoundException ex)
             {
